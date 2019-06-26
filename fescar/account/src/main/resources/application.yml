@@ -1,0 +1,56 @@
+server:
+    port: 8081
+    application:
+        name: account
+
+#mysql
+spring:
+    datasource:
+        url: jdbc:mysql://localhost:3306/db_gts_fescar_account?useUnicode=true&characterEncoding=utf8
+        username: root
+        password: 123456
+        driver-class-name: com.mysql.jdbc.Driver
+        type: com.alibaba.druid.pool.DruidDataSource
+    application:
+        name: account
+    #cloud-nacos
+    cloud:
+        nacos:
+            discovery:
+                server-addr: 127.0.0.1:8848
+
+#mybatis-plus
+mybatis-plus:
+    mapper-locations: classpath*:/mappers/*.xml
+    type-aliases-package: com.main.entity
+
+#dubbo
+dubbo:
+    scan:
+        base-packages: com.main
+    application:
+        id: account
+        name: account
+        qos-enable: false
+    protocol:
+        id: dubbo
+        name: dubbo
+        port: -1
+    registry:
+        id: account
+        address: nacos://localhost:8848
+        check: false
+    provider:
+        version: 1.0.0
+        retries: 0
+        timeout: 1000
+    consumer:
+        version: 1.0.0
+        retries: 0
+        timeout: 1000
+        check: false
+
+druid:
+    username: druid
+    password: 123456
+
