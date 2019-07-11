@@ -7,6 +7,7 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -17,17 +18,19 @@ import java.util.Date;
 @Getter
 @Setter
 @Document(indexName = "employee_index",type = "employee", shards = 1,replicas = 0, refreshInterval = "-1")
-public class Employee {
+public class Employee implements Serializable {
 
     @Id
     private Integer employeeId;
 
-    @Field
+    @Field(type = FieldType.Text)
     private String employeeName;
 
     private Integer age;
 
+    @Field(type = FieldType.Long)
     private Date createTime;
 
+    @Field(type = FieldType.Long)
     private Date updateTime;
 }

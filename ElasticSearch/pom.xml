@@ -24,10 +24,26 @@
             <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>io.searchbox</groupId>
-            <artifactId>jest</artifactId>
-        </dependency>
+        <!--<dependency>
+            <groupId>org.elasticsearch.client</groupId>
+            <artifactId>transport</artifactId>
+            <version>5.5.2</version>
+        </dependency>-->
+
+        <!--<dependency>
+            <groupId>org.elasticsearch.client</groupId>
+            <artifactId>elasticsearch-rest-high-level-client</artifactId>
+            <version>5.6.2</version>
+        </dependency>-->
+
+        <!--如果不指定，springboot会自动引入5.x版本,所以需要强行引入高版本，
+            elasticsearch-rest-client版本是同步，不需要强行指定，如果发现不同步也可以指定-->
+       <!--<dependency>
+            <groupId>org.elasticsearch</groupId>
+            <artifactId>elasticsearch</artifactId>
+            <version>5.6.2</version>
+        </dependency>-->
+
     </dependencies>
 
 </project>
