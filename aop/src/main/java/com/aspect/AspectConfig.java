@@ -1,5 +1,6 @@
 package com.aspect;
 
+import com.sun.xml.internal.bind.v2.TODO;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
@@ -17,8 +18,7 @@ import org.springframework.stereotype.Component;
                     }
                     @Around
                     @AfterReturning
-
-              */
+            **/
 /***************************Aspect中各种增强的执行顺序****************************************/
 
 /**
@@ -47,50 +47,20 @@ public class AspectConfig {
     }
 
     /**
-     * 后置增强
-     * @param joinPoint
-     */
-    @After("@annotation(com.annotation.LogOutput)")
-    public void logOutputAfter(JoinPoint joinPoint){
-        System.out.println("================After-Start==================");
-
-        Object[] argsArr = joinPoint.getArgs();
-        for (Object object : argsArr){
-            System.out.println(object);
-        }
-
-        System.out.println("================After-End==================");
-    }
-
-    /**
-     * 最终增强
-     * @param joinPoint
-     */
-    @AfterReturning("@annotation(com.annotation.LogOutput)")
-    public void logOutputAfterReturning(JoinPoint joinPoint){
-        System.out.println("================AfterReturning-Start==================");
-
-        Object[] argsArr = joinPoint.getArgs();
-        for (Object object : argsArr){
-            System.out.println(object);
-        }
-
-        System.out.println("================AfterReturning-End==================");
-    }
-
-    /**
      * 环绕增强
-     * @param joinPoint
+     * @param proceedingJoinPoint
      */
     @Around("@annotation(com.annotation.LogOutput)")
-    public int logOutputAround(ProceedingJoinPoint joinPoint) throws Throwable {
+    public int logOutputAround(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         System.out.println("================Around-Start==================");
 
-        Object[] argsArr = joinPoint.getArgs();
+        Object[] argsArr = proceedingJoinPoint.getArgs();
         for (Object object : argsArr){
             System.out.println(object);
         }
-        joinPoint.proceed(argsArr);
+
+        //TODO  proceedingJoinPoint.proceed() 可以使目标方法执行，如果没有添加，则@Before失效
+        proceedingJoinPoint.proceed(argsArr);
 
         System.out.println("================Around-End==================");
 
@@ -113,17 +83,36 @@ public class AspectConfig {
         System.out.println("================AfterThrowing-End==================");
     }
 
-    public static void main(String[] args) {
-        try {
-//            System.out.println(1/0);
-            System.out.println("1111111111111111111");
-        }catch (Exception e){
-            System.out.println("2222222222222222222");
-        }finally {
-            System.out.println("3333333333333333333");
+    /**
+     * 后置增强
+     * @param joinPoint
+     */
+    @AfterReturning("@annotation(com.annotation.LogOutput)")
+    public void logOutputAfterReturning(JoinPoint joinPoint){
+        System.out.println("================AfterReturning-Start==================");
+
+        Object[] argsArr = joinPoint.getArgs();
+        for (Object object : argsArr){
+            System.out.println(object);
         }
-        System.out.println("4444444444444444444444");
-//        return;
+
+        System.out.println("================AfterReturning-End==================");
+    }
+
+    /**
+     * 最终增强
+     * @param joinPoint
+     */
+    @After("@annotation(com.annotation.LogOutput)")
+    public void logOutputAfter(JoinPoint joinPoint){
+        System.out.println("================After-Start==================");
+
+        Object[] argsArr = joinPoint.getArgs();
+        for (Object object : argsArr){
+            System.out.println(object);
+        }
+
+        System.out.println("================After-End==================");
     }
 
 }
