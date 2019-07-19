@@ -1,10 +1,10 @@
-package com.example.interfaced;
+package com.example.repository;
 
 import com.example.entity.Employee;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.stereotype.Component;
 
 @Component
-public interface EmployeeRepository extends ElasticsearchRepository<Employee,Integer> {
+public interface EmployeeRepository extends ElasticsearchRepository<Employee,String> {
 
 }

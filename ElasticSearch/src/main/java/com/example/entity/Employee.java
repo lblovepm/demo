@@ -14,6 +14,10 @@ import java.util.Date;
  * @author Mr.LB
  * @description: TODO
  * @date 2019/7/1 11:15
+ *
+ * @Document中各个属性详解:
+ *    1、shards: 分片,ES中所有数据均衡的存储在集群中各个节点的分片中，会影响ES的性能、安全和稳定性
+ *    2、replicas: 复制，可以理解为备份分片
  */
 @Getter
 @Setter
@@ -21,16 +25,12 @@ import java.util.Date;
 public class Employee implements Serializable {
 
     @Id
-    private Integer employeeId;
+    private String employeeId;
 
-    @Field(type = FieldType.Text)
+    @Field(type = FieldType.Text,analyzer = "ik_max_word",searchAnalyzer = "ik_smart")
     private String employeeName;
 
     private Integer age;
 
-    @Field(type = FieldType.Long)
     private Date createTime;
-
-    @Field(type = FieldType.Long)
-    private Date updateTime;
 }

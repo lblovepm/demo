@@ -1,23 +1,28 @@
 package com.example.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.example.common.PageParam;
 import com.example.entity.Employee;
-import com.example.interfaced.EmployeeRepository;
+import com.example.repository.EmployeeRepository;
+import com.example.utils.ElasticSearchClientUtil;
+import org.elasticsearch.action.admin.indices.delete.DeleteIndexResponse;
+import org.elasticsearch.client.Client;
+import org.elasticsearch.client.IndicesAdminClient;
 import org.elasticsearch.index.query.*;
+import org.elasticsearch.search.sort.SortBuilders;
+import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.UnknownHostException;
 import java.util.*;
 
 /**
  * @author Mr.LB
- * @description: TODO
+ * @description: Elastic Search
  * @date 2019/7/1 11:18
  */
 @RestController
@@ -28,172 +33,122 @@ public class EmployeeController {
     private EmployeeRepository employeeRepository;
 
     /**
-     * 新增
-     * @param employeeId
+     * 新增员工
      * @param employeeName
      * @param age
      */
-    @RequestMapping("/add")
-    public JSONObject add(Integer employeeId, String employeeName, Integer age){
+    @RequestMapping("/add_employee")
+    public JSONObject addEmployee(String employeeName,Integer age){
+
         Employee employee = new Employee();
-        employee.setEmployeeId(employeeId);
+        employee.setEmployeeId(UUID.randomUUID().toString());
         employee.setEmployeeName(employeeName);
         employee.setAge(age);
         employee.setCreateTime(new Date());
-        employee.setUpdateTime(employee.getCreateTime());
-        Employee resultEmployee = employeeRepository.save(employee);
+
+        employeeRepository.save(employee);
 
         JSONObject resultJson = new JSONObject();
-        resultJson.put("result",resultEmployee);
+        resultJson.put("errCode","0");
+
         return resultJson;
     }
 
     /**
-     * 更新
-     * @param employeeId
+     * 查询员工列表
+     *
+     * @param employeeName  员工姓名
+     * @param startAge      开始年龄
+     * @param endAge        结束年龄
+     * @param pageNumber    页面
+     * @param pageSize      页面容量
+     * @return
      */
-    @RequestMapping("/update")
-    public JSONObject update(Integer employeeId,String employeeName,Integer age){
-        Optional<Employee> optionalEmployee = employeeRepository.findById(employeeId);
-        Employee employee = optionalEmployee.get();
+    @RequestMapping("/query_employee")
+    public JSONObject queryEmployee(String employeeName,Integer startAge,Integer endAge,Integer pageNumber,Integer pageSize){
+        NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder();
 
-        employee.setEmployeeName(employeeName);
-        employee.setAge(age);
-        employee.setUpdateTime(new Date());
-        Employee resultEmployee = employeeRepository.save(employee);
+        //分页【es中分页查询是从0开始,所以这里需要减1】
+        nativeSearchQueryBuilder.withPageable(PageRequest.of(pageNumber-1,pageSize));
+        //排序
+        nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("age").order(SortOrder.DESC));
 
-        JSONObject resultJson = new JSONObject();
-        resultJson.put("result",resultEmployee);
-        return resultJson;
-    }
-
-    /**
-     * 删除  by id
-     * @param employeeId
-     */
-    @RequestMapping("/delete/{employeeId}")
-    public JSONObject deleteById(@PathVariable("employeeId") Integer employeeId){
-        employeeRepository.deleteById(employeeId);
-
-        JSONObject resultJson = new JSONObject();
-        resultJson.put("result",true);
-        return resultJson;
-    }
-
-    /**
-     * 删除 by entity
-     * @param employeeId
-     */
-    @RequestMapping("/delete")
-    public JSONObject delete(Integer employeeId){
-        Optional<Employee> optionalEmployee = employeeRepository.findById(employeeId);
-        Employee employee = optionalEmployee.get();
-
-        employeeRepository.delete(employee);
-
-        JSONObject resultJson = new JSONObject();
-        resultJson.put("result",true);
-        return resultJson;
-    }
-
-    /**
-     * 查询 by id
-     * @param employeeId
-     */
-    @RequestMapping("/query")
-    public JSONObject query(Integer employeeId){
-        Iterable<Employee> employeeIterable;
-        if(null == employeeId){
-            employeeIterable = employeeRepository.findAll();
-        }else{
-            List<Integer> employeeIdList = new ArrayList<>();
-            employeeIdList.add(employeeId);
-            employeeIterable = employeeRepository.findAllById(employeeIdList);
+        //employeeName模糊查询
+        if(!StringUtils.isEmpty(employeeName)){
+            WildcardQueryBuilder employeeNameWildcardQueryBuilder = QueryBuilders.wildcardQuery("employeeName", "*"+employeeName+"*");
+            nativeSearchQueryBuilder.withFilter(employeeNameWildcardQueryBuilder);
         }
 
+        //age范围区间查询
+        if(null != startAge){
+            RangeQueryBuilder rangeQueryBuilder = QueryBuilders.rangeQuery("age").gte(startAge);
+            if(null != endAge){
+                rangeQueryBuilder.lte(endAge);
+            }
+            nativeSearchQueryBuilder.withFilter(rangeQueryBuilder);
+        }
+
+        Iterable<Employee> employeeIterable = employeeRepository.search(nativeSearchQueryBuilder.build());
         Iterator<Employee> employeeIterator = employeeIterable.iterator();
 
         List<Employee> employeeList = new ArrayList<>();
+
+        Employee employee;
         while (employeeIterator.hasNext()){
-            Employee employee = employeeIterator.next();
+            employee = employeeIterator.next();
             employeeList.add(employee);
         }
 
         JSONObject resultJson = new JSONObject();
-        resultJson.put("result",employeeList);
+        resultJson.put("errCode","0");
+        resultJson.put("employeeList",employeeList);
+
         return resultJson;
     }
 
     /**
-     * 根据名称查询
-     * @param employeeName
-     * @param pageable
+     * 通过索引名删除索引
+     * @param indexName
      * @return
+     * @throws UnknownHostException
      */
-    @RequestMapping("/match_phrase_query")
-    public JSONObject matchPhraseQuery(String employeeName, Pageable pageable){
-        MatchPhraseQueryBuilder builder = QueryBuilders.matchPhraseQuery("employeeName", employeeName);
+    @RequestMapping("/delete_index")
+    public JSONObject deleteIndex(String indexName) throws UnknownHostException {
+        Client client = ElasticSearchClientUtil.getClientInstance();
 
-        Page<Employee> employeeList = employeeRepository.search(builder,pageable);
+        //产生一个允许从索引中执行action或操作的client
+        IndicesAdminClient indicesAdminClient = client.admin().indices();
+        //产生一个允许从集群中执行action或操作的client
+//        ClusterAdminClient clusterAdminClient = client.admin().cluster();
 
         JSONObject resultJson = new JSONObject();
-        resultJson.put("result",employeeList);
+
+        DeleteIndexResponse deleteIndexResponse = null;
+        try {
+            deleteIndexResponse = indicesAdminClient.prepareDelete(indexName).execute().actionGet();
+
+            resultJson.put("errCode","0");
+            resultJson.put("result",deleteIndexResponse.isAcknowledged());
+        }catch (Exception e){
+            throw new RuntimeException(e.getMessage());
+        }
         return resultJson;
     }
 
     /**
-     * 根据名称查询
-     * @param employeeName
-     * @param pageable
+     * 清除所有数据
      * @return
      */
-    @RequestMapping("/match_query")
-    public JSONObject matchQuery(String employeeName, Pageable pageable){
-        MatchQueryBuilder builder = QueryBuilders.matchQuery("employeeName", employeeName);
+    @RequestMapping("/delete_all_data")
+    public JSONObject deleteAllData(){
 
-        Page<Employee> employeeList = employeeRepository.search(builder,pageable);
+        employeeRepository.deleteAll();
 
         JSONObject resultJson = new JSONObject();
-        resultJson.put("result",employeeList);
+        resultJson.put("errCode","0");
+        resultJson.put("result","数据已清除完");
+
         return resultJson;
     }
 
-    /**
-     * 根据名称查询
-     * @param employeeName
-     * @param pageable
-     * @return
-     */
-    @RequestMapping("/match_phrase_prefix_query")
-    public JSONObject matchPhrasePrefixQuery(String employeeName, Pageable pageable){
-        MatchPhrasePrefixQueryBuilder builder = QueryBuilders.matchPhrasePrefixQuery("employeeName", employeeName);
-
-        Page<Employee> employeeList = employeeRepository.search(builder,pageable);
-
-        JSONObject resultJson = new JSONObject();
-        resultJson.put("result",employeeList);
-        return resultJson;
-    }
-
-    /**
-     * 根据名称查询
-     * @param employeeName
-     * @param pageable
-     * @return
-     */
-    @RequestMapping("/multi_match_query")
-    public JSONObject multiMatchQuery(String employeeName, PageParam pageable){
-        MultiMatchQueryBuilder builder = QueryBuilders.multiMatchQuery(employeeName,"employeeName");
-
-        System.out.println("pageNumber------------>"+pageable.getPageNumber());
-        System.out.println("pageSize-------------->"+pageable.getPageSize());
-
-        Sort sort= new Sort(Sort.Direction.DESC,"createTime");
-
-        Page<Employee> employeeList = employeeRepository.search(builder,pageable);
-
-        JSONObject resultJson = new JSONObject();
-        resultJson.put("result",employeeList);
-        return resultJson;
-    }
 }
