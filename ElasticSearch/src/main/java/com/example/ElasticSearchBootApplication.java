@@ -13,6 +13,6 @@ public class ElasticSearchBootApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(ElasticSearchBootApplication.class, args);
-        System.out.println("================Elastic-Search===============");
+        System.out.println("================Elastic Search START UP SUCCESS===============");
     }
 }
