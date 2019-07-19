@@ -123,7 +123,7 @@ public class EmployeeController {
 
         JSONObject resultJson = new JSONObject();
 
-        DeleteIndexResponse deleteIndexResponse = null;
+        DeleteIndexResponse deleteIndexResponse;
         try {
             deleteIndexResponse = indicesAdminClient.prepareDelete(indexName).execute().actionGet();
 
