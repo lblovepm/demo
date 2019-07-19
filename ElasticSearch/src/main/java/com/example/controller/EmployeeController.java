@@ -75,28 +75,28 @@ public class EmployeeController {
 
         //employeeName模糊查询
         if(!StringUtils.isEmpty(employeeName)){
-            WildcardQueryBuilder employeeNameWildcardQueryBuilder = QueryBuilders.wildcardQuery("employeeName", "*"+employeeName+"*");
-            nativeSearchQueryBuilder.withFilter(employeeNameWildcardQueryBuilder);
+            FuzzyQueryBuilder employeeNameFuzzyQueryBuilder = QueryBuilders.fuzzyQuery("employeeName", employeeName);
+            nativeSearchQueryBuilder.withQuery(employeeNameFuzzyQueryBuilder);
         }
 
         //age范围区间查询
-        if(null != startAge){
-            RangeQueryBuilder rangeQueryBuilder = QueryBuilders.rangeQuery("age").gte(startAge);
+        if(null != startAge || null != endAge){
+            RangeQueryBuilder rangeQueryBuilder = QueryBuilders.rangeQuery("age");
+            if(null != startAge){
+                rangeQueryBuilder.gte(startAge);
+            }
             if(null != endAge){
                 rangeQueryBuilder.lte(endAge);
             }
-            nativeSearchQueryBuilder.withFilter(rangeQueryBuilder);
+            nativeSearchQueryBuilder.withQuery(rangeQueryBuilder);
         }
-
-        Iterable<Employee> employeeIterable = employeeRepository.search(nativeSearchQueryBuilder.build());
-        Iterator<Employee> employeeIterator = employeeIterable.iterator();
 
         List<Employee> employeeList = new ArrayList<>();
 
-        Employee employee;
+        Iterable<Employee> employeeIterable = employeeRepository.search(nativeSearchQueryBuilder.build());
+        Iterator<Employee> employeeIterator = employeeIterable.iterator();
         while (employeeIterator.hasNext()){
-            employee = employeeIterator.next();
-            employeeList.add(employee);
+            employeeList.add(employeeIterator.next());
         }
 
         JSONObject resultJson = new JSONObject();

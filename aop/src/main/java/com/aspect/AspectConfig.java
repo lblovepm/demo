@@ -2,7 +2,9 @@ package com.aspect;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.*;
+import org.aspectj.lang.reflect.SourceLocation;
 import org.springframework.stereotype.Component;
 
 /***************************Aspect中各种增强的执行顺序****************************************/
@@ -33,7 +35,7 @@ public class AspectConfig {
      * 前置增强
      * @param joinPoint
      */
-    @Before("@annotation(com.annotation.LogOutput)")
+//    @Before("@annotation(com.annotation.LogOutput)")
     public void logOutputBefore(JoinPoint joinPoint){
         System.out.println("================Before-Start==================");
 
@@ -53,10 +55,20 @@ public class AspectConfig {
     public int logOutputAround(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         System.out.println("================Around-Start==================");
 
+        //TODO 参数
         Object[] argsArr = proceedingJoinPoint.getArgs();
         for (Object object : argsArr){
-            System.out.println(object);
+            System.out.println("参数--------------->"+object);
         }
+
+        String kind = proceedingJoinPoint.getKind();
+        System.out.println("kind--------------->"+kind);
+
+        Signature signature = proceedingJoinPoint.getSignature();
+        System.out.println("signature--------------->"+signature.getName());
+
+        SourceLocation sourceLocation = proceedingJoinPoint.getSourceLocation();
+        System.out.println("sourceLocation--------------------->"+sourceLocation);
 
         //TODO  proceedingJoinPoint.proceed() 可以使目标方法执行，如果没有添加，则@Before失效
         proceedingJoinPoint.proceed(argsArr);
@@ -70,7 +82,7 @@ public class AspectConfig {
      * 异常增强
      * @param joinPoint
      */
-    @AfterThrowing("@annotation(com.annotation.LogOutput)")
+//    @AfterThrowing("@annotation(com.annotation.LogOutput)")
     public void logOutputAfterThrowing(JoinPoint joinPoint){
         System.out.println("================AfterThrowing-Start==================");
 
@@ -86,7 +98,7 @@ public class AspectConfig {
      * 后置增强
      * @param joinPoint
      */
-    @AfterReturning("@annotation(com.annotation.LogOutput)")
+//    @AfterReturning("@annotation(com.annotation.LogOutput)")
     public void logOutputAfterReturning(JoinPoint joinPoint){
         System.out.println("================AfterReturning-Start==================");
 
@@ -102,7 +114,7 @@ public class AspectConfig {
      * 最终增强
      * @param joinPoint
      */
-    @After("@annotation(com.annotation.LogOutput)")
+//    @After("@annotation(com.annotation.LogOutput)")
     public void logOutputAfter(JoinPoint joinPoint){
         System.out.println("================After-Start==================");
 
