@@ -16,6 +16,7 @@
         <module>rocketmq</module>
         <module>easyExcel</module>
         <module>ElasticSearch</module>
+        <module>websocket</module>
     </modules>
 
     <parent>

@@ -1,18 +1,13 @@
-package com;
+package com.main;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-/**
- * @author Mr.LB
- * @description: AOP
- * @date 2019/7/11 14:07
- */
 @SpringBootApplication
-public class AopSpringBootApplication {
+public class WebSocketSpringBootApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(AopSpringBootApplication.class, args);
+        SpringApplication.run(WebSocketSpringBootApplication.class, args);
     }
 
 }
