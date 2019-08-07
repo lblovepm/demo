@@ -1,7 +1,6 @@
 package com.main.test;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import redis.clients.jedis.Jedis;
 
@@ -43,6 +42,7 @@ public class RedisTestDemo {
         jedis.zadd("lb_zset",3,"lb3");
         jedis.zadd("lb_zset",4,"lb4");
         jedis.zadd("lb_zset",2,"lb5");
+
         System.out.println("zset----->"+jedis.zrange("lb_zset",0,4));
     }
 }
