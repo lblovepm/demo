@@ -17,6 +17,8 @@
         <module>easyExcel</module>
         <module>ElasticSearch</module>
         <module>websocket</module>
+        <module>shiro</module>
+        <module>hadoop</module>
     </modules>
 
     <parent>

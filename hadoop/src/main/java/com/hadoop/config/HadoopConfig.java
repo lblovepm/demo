@@ -35,7 +35,7 @@ public class HadoopConfig {
             URI uri = new URI(nameNode.trim());
             fileSystem = FileSystem.get(uri,conf);
         } catch (Exception e) {
-            log.error("", e);
+
         }
         return  fileSystem;
     }

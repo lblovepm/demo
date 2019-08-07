@@ -1,6 +1,8 @@
 package com.main.test;
 
-import com.main.util.JedisUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Component;
 import redis.clients.jedis.Jedis;
 
 /**
@@ -8,10 +10,13 @@ import redis.clients.jedis.Jedis;
  * @description: TODO
  * @date 2019/5/27 18:57
  */
-public class TestDemo {
+@Component
+public class RedisTestDemo {
 
-    public static void main(String[] args) {
-        Jedis jedis = JedisUtils.getJedisInstance();
+    @Autowired
+    private Jedis jedis;
+
+    public void test(String[] args) {
 
         //String
         jedis.set("lb","lblove2019");

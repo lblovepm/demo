@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
@@ -12,7 +13,6 @@ import redis.clients.jedis.JedisPoolConfig;
  * @description: redis配置
  * @date 2019/5/27 17:31
  */
-
 @Configuration
 @EnableCaching
 public class RedisConfig {
@@ -33,12 +33,12 @@ public class RedisConfig {
     private long maxWaitMillis;
 
     @Bean
-    public JedisPool redisPoolFactory() {
+    public Jedis redisPoolFactory() {
         JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
         jedisPoolConfig.setMaxIdle(maxIdle);
         jedisPoolConfig.setMaxWaitMillis(maxWaitMillis);
         JedisPool jedisPool = new JedisPool(jedisPoolConfig, host, port);
-        jedisPool.getResource().set("234","2345");
-        return jedisPool;
+
+        return jedisPool.getResource();
     }
 }

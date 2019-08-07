@@ -75,7 +75,7 @@ public class HadoopTemplate {
                 flag = true;
             }
         }catch (Exception e){
-            log.error("", e);
+
         }
         return flag;
     }
@@ -107,7 +107,7 @@ public class HadoopTemplate {
             //释放资源
             //    fileSystem.close();
         } catch (IOException e) {
-            log.error("", e);
+
         }
     }
 
@@ -129,7 +129,7 @@ public class HadoopTemplate {
             // 删除文件或者文件目录  delete(Path f) 此方法已经弃用
             fileSystem.delete(new Path(path),true);
         } catch (IllegalArgumentException | IOException e) {
-            log.error("", e);
+
         }
     }
 
@@ -152,7 +152,7 @@ public class HadoopTemplate {
             // 释放资源
             // fs.close();
         } catch (IOException e) {
-            log.error("", e);
+
         }
     }
 
