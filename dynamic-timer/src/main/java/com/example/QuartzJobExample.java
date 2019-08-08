@@ -1,4 +1,4 @@
-package com.elasticsearch;
+package com.example;
 
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
