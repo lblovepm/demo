@@ -19,6 +19,7 @@
         <module>websocket</module>
         <module>shiro</module>
         <module>hadoop</module>
+        <module>swagger2</module>
     </modules>
 
     <parent>

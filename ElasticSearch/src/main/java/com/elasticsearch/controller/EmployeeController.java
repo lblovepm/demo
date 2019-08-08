@@ -1,9 +1,10 @@
-package com.example.controller;
+package com.elasticsearch.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.example.entity.Employee;
-import com.example.repository.EmployeeRepository;
-import com.example.utils.ElasticSearchClientUtil;
+import com.elasticsearch.entity.Employee;
+import com.elasticsearch.repository.EmployeeRepository;
+import com.elasticsearch.utils.ElasticSearchClientUtil;
+import io.swagger.annotations.ApiOperation;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.IndicesAdminClient;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,7 +39,8 @@ public class EmployeeController {
      * @param employeeName
      * @param age
      */
-    @RequestMapping("/add_employee")
+    @ApiOperation(value="新增员工",notes = "这个api是用来新增员工的")
+    @GetMapping("/add_employee")
     public JSONObject addEmployee(String employeeName,Integer age){
 
         Employee employee = new Employee();
@@ -64,7 +67,8 @@ public class EmployeeController {
      * @param pageSize      页面容量
      * @return
      */
-    @RequestMapping("/query_employee")
+    @ApiOperation(value="查询员工列表",notes = "这个api是用来查询员工列表的")
+    @GetMapping("/query_employee")
     public JSONObject queryEmployee(String employeeName,Integer startAge,Integer endAge,Integer pageNumber,Integer pageSize){
         NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder();
 
@@ -112,7 +116,8 @@ public class EmployeeController {
      * @return
      * @throws UnknownHostException
      */
-    @RequestMapping("/delete_index")
+    @ApiOperation(value="通过索引名删除索引",notes = "这个api是用来通过索引名删除索引的")
+    @GetMapping("/delete_index")
     public JSONObject deleteIndex(String indexName) throws UnknownHostException {
         Client client = ElasticSearchClientUtil.getClientInstance();
 
@@ -139,7 +144,8 @@ public class EmployeeController {
      * 清除所有数据
      * @return
      */
-    @RequestMapping("/delete_all_data")
+    @ApiOperation(value="清除所有数据",notes = "这个api是用来清除所有数据的")
+    @GetMapping("/delete_all_data")
     public JSONObject deleteAllData(){
 
         employeeRepository.deleteAll();

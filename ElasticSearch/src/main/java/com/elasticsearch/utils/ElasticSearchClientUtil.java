@@ -1,4 +1,4 @@
-package com.example.utils;
+package com.elasticsearch.utils;
 
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexResponse;
 import org.elasticsearch.client.Client;

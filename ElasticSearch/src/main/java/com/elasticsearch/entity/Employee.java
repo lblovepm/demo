@@ -1,4 +1,4 @@
-package com.example.entity;
+package com.elasticsearch.entity;
 
 import lombok.Getter;
 import lombok.Setter;
