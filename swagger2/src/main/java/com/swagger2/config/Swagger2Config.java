@@ -14,6 +14,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  * swagger2配置
  * @author Mr.LB
  * @date 2019-08-08 09:30:00
+ *
+ * TODO 项目启动后,在浏览器输入 http://localhost:8087/doc.html 即可打开swagger2的api界面
  */
 @Configuration
 @EnableSwagger2
