@@ -20,6 +20,7 @@
         <module>shiro</module>
         <module>hadoop</module>
         <module>swagger2</module>
+        <module>QR-code</module>
     </modules>
 
     <parent>
