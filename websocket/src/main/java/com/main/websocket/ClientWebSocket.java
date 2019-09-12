@@ -20,7 +20,7 @@ public class ClientWebSocket {
     private static ConcurrentHashMap<String,Session> sessionMap = new ConcurrentHashMap<>();
 
     /**
-     * 客户端和服务器成功简历连接
+     * 客户端和服务器成功建立连接
      * @param session
      * @throws IOException
      */
