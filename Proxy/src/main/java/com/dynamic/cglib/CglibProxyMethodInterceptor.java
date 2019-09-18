@@ -13,10 +13,10 @@ import java.lang.reflect.Method;
 public class CglibProxyMethodInterceptor implements MethodInterceptor {
 
     @Override
-    public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable {
+    public Object intercept(Object object, Method method, Object[] objectArr, MethodProxy methodProxy) throws Throwable {
         System.out.println("cglib动态代理执行前的操作-----------");
 
-        Object result = methodProxy.invokeSuper(o,objects);
+        Object result = methodProxy.invokeSuper(object,objectArr);
 
         return result;
     }
