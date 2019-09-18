@@ -7,5 +7,5 @@ package com.annotation;
  */
 public @interface LogOutput {
 
-    String[] params() default {};;
+    String[] params() default {};
 }

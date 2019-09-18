@@ -7,6 +7,6 @@ package com.annotation;
  */
 public @interface LogOut {
 
-    String[] params() default {};;
+    String[] params() default {};
 
 }
