@@ -19,7 +19,7 @@ public class KafkaConsumer {
     /**
      * 监听topic1主题,单条消费
      */
-    @KafkaListener(topics = {"my-topic"},groupId = "test-consumer-group1")
+    @KafkaListener(topics = {"my-topic1"},groupId = "test-consumer-group1")
     public void listen1(ConsumerRecord<String, String> record) {
         System.out.println("topic1开始收到消息------------>from"+record.partition());
         consumer(record);
@@ -28,16 +28,16 @@ public class KafkaConsumer {
     /**
      * 监听topic2主题,单条消费
      */
-    @KafkaListener(topics = {"my-topic"},groupId = "test-consumer-group1")
+    @KafkaListener(topics = {"my-topic2"},groupId = "test-consumer-group1")
     public void listen2(ConsumerRecord<String, String> record) {
         System.out.println("topic2开始收到消息------------>from"+record.partition());
         consumer(record);
     }
 
     /**
-     * 监听topic2主题,单条消费
+     * 监听topic3主题,单条消费
      */
-    @KafkaListener(topics = {"my-topic"},groupId = "test-consumer-group1")
+    @KafkaListener(topics = {"my-topic3"},groupId = "test-consumer-group1")
     public void listen3(ConsumerRecord<String, String> record) {
         System.out.println("topic3开始收到消息------------>from"+record.partition());
         consumer(record);

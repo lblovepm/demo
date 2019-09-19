@@ -25,11 +25,11 @@ public class KafkaProducer {
     /**
      * 向topic中发送消息
      * @param topic
-     * @param msg
+     * @param message
      * @throws Exception
      */
-    public static void send(String topic, String msg) throws Exception {
-        ListenableFuture<SendResult<String, String>> future = kafkaTemplate.send(topic, msg);
+    public static void sendMessage(String topic, String message) throws Exception {
+        ListenableFuture<SendResult<String, String>> future = kafkaTemplate.send(topic, message);
         SendResult<String, String> sendResult = future.get();
         System.out.println("isDone2----->"+future.isDone());
         RecordMetadata recordMetadata = sendResult.getRecordMetadata();
@@ -39,12 +39,12 @@ public class KafkaProducer {
     /**
      * 向topic中发送消息列表
      * @param topic
-     * @param msgList
+     * @param messageList
      */
-    public static void send(String topic, List<String> msgList) {
-        if(null == msgList || msgList.size() == 0){
+    public static void sendMessageList(String topic, List<String> messageList) {
+        if(null == messageList || messageList.size() == 0){
             throw new RuntimeException("消息列表不能为空!");
         }
-        msgList.forEach(msg -> kafkaTemplate.send(topic, msg));
+        messageList.forEach(msg -> kafkaTemplate.send(topic, msg));
     }
 }
