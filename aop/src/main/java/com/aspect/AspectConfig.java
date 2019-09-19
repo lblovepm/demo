@@ -35,7 +35,7 @@ public class AspectConfig {
      * 前置增强
      * @param joinPoint
      */
-//    @Before("@annotation(com.annotation.LogOutput)")
+    @Before("@annotation(com.annotation.LogOutput)")
     public void logOutputBefore(JoinPoint joinPoint){
         System.out.println("================Before-Start==================");
 
@@ -80,16 +80,13 @@ public class AspectConfig {
 
     /**
      * 异常增强
-     * @param joinPoint
+     * @param ex
      */
-//    @AfterThrowing("@annotation(com.annotation.LogOutput)")
-    public void logOutputAfterThrowing(JoinPoint joinPoint){
+    @AfterThrowing(throwing = "ex",pointcut = "@annotation(com.annotation.LogOutput)")
+    public void logOutputAfterThrowing(Throwable ex){
         System.out.println("================AfterThrowing-Start==================");
 
-        Object[] argsArr = joinPoint.getArgs();
-        for (Object object : argsArr){
-            System.out.println(object);
-        }
+        System.out.println(ex);
 
         System.out.println("================AfterThrowing-End==================");
     }
@@ -98,7 +95,7 @@ public class AspectConfig {
      * 后置增强
      * @param joinPoint
      */
-//    @AfterReturning("@annotation(com.annotation.LogOutput)")
+    @AfterReturning("@annotation(com.annotation.LogOutput)")
     public void logOutputAfterReturning(JoinPoint joinPoint){
         System.out.println("================AfterReturning-Start==================");
 
@@ -114,7 +111,7 @@ public class AspectConfig {
      * 最终增强
      * @param joinPoint
      */
-//    @After("@annotation(com.annotation.LogOutput)")
+    @After("@annotation(com.annotation.LogOutput)")
     public void logOutputAfter(JoinPoint joinPoint){
         System.out.println("================After-Start==================");
 

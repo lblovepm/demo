@@ -19,6 +19,7 @@
         <module>shiro</module>
         <module>hadoop</module>
         <module>swagger2</module>
+        <module>validator</module>
     </modules>
 
     <parent>

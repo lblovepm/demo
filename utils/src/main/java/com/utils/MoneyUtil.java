@@ -1,5 +1,7 @@
 package com.utils;
 
+import org.springframework.validation.BindingResult;
+
 import java.math.BigDecimal;
 
 /**
@@ -17,13 +19,13 @@ public class MoneyUtil {
     public static final String CURRENCY_YUAN_REGEX = "(([1-9]{1}\\d*)|([0]{1}))(\\.(\\d){0,2})?";   
         
     /**   
-     * 将分为单位的转换为元 (除100)   
+     * 将分为单位的转换为元 (除以100)
      *    
      * @param amount   
      * @return   
      * @throws Exception    
      */    
-    public static String changeFenToYuan(String amount) throws Exception{    
+    public static String changeFenToYuan(String amount) throws Exception{
         if(!amount.matches(CURRENCY_FEN_REGEX)) {    
             throw new Exception("金额格式有误");    
         }    
@@ -31,7 +33,7 @@ public class MoneyUtil {
     }   
     
     /**   
-     * 将分为单位的转换为元 (除100)   
+     * 将分为单位的转换为元 (除以100)
      *    
      * @param amount   
      * @return   
@@ -45,21 +47,21 @@ public class MoneyUtil {
     }
         
     /**    
-     * 将元为单位的转换为分 (乘100)   
+     * 将元为单位的转换为分 (乘以100)
      *    
      * @param amount   
      * @return   
      * @throws Exception 
      */    
-    public static BigDecimal changeYuanToFen(Double amount) throws Exception{   
+    public static BigDecimal changeYuanToFen(BigDecimal amount) throws Exception{
     	if(!String.valueOf(amount).matches(CURRENCY_YUAN_REGEX)){
     		throw new Exception("金额格式有误");
     	}
-        return BigDecimal.valueOf(amount).multiply(new BigDecimal(100));
+        return amount.multiply(new BigDecimal(100));
     }
     
     /**    
-     * 将元为单位的转换为分 (乘100)   
+     * 将元为单位的转换为分 (乘以100)
      *    
      * @param amount   
      * @return   
