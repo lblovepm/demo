@@ -51,9 +51,10 @@ public class ValidatorController {
     @RequestMapping("/test2")
     public JSONObject test2(@Validated(value = UpdateGroup.class) ValidatorModel validatorModel){
         JSONObject resultJson = new JSONObject();
-
         resultJson.put("flag",true);
         resultJson.put("result",validatorModel);
+
+        System.out.print(1/0);
 
         return resultJson;
     }
