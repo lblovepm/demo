@@ -1,6 +1,7 @@
 package com.kafka.demo.provider;
 
 import org.apache.kafka.clients.producer.RecordMetadata;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Component;
@@ -14,18 +15,21 @@ import java.util.List;
 @Component
 public class KafkaProducer {
 
-    private final KafkaTemplate<String, String> kafkaTemplate;
+    private static KafkaTemplate<String, String> kafkaTemplate;
 
+    @Autowired
     public KafkaProducer(KafkaTemplate<String, String> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
     }
 
     /**
      * 向topic中发送消息
+     * @param topic
+     * @param msg
+     * @throws Exception
      */
-    public void send (String topic, String msg) throws Exception {
+    public static void send(String topic, String msg) throws Exception {
         ListenableFuture<SendResult<String, String>> future = kafkaTemplate.send(topic, msg);
-//        System.out.println("isDone1----->"+future.isDone());
         SendResult<String, String> sendResult = future.get();
         System.out.println("isDone2----->"+future.isDone());
         RecordMetadata recordMetadata = sendResult.getRecordMetadata();
@@ -33,12 +37,14 @@ public class KafkaProducer {
     }
 
     /**
-     * 向topic中发送消息
+     * 向topic中发送消息列表
+     * @param topic
+     * @param msgList
      */
-    public void send (String topic, List<String> msgs) {
-        if(null == msgs || msgs.size() == 0){
+    public static void send(String topic, List<String> msgList) {
+        if(null == msgList || msgList.size() == 0){
             throw new RuntimeException("消息列表不能为空!");
         }
-        msgs.forEach(msg -> kafkaTemplate.send(topic, msg));
+        msgList.forEach(msg -> kafkaTemplate.send(topic, msg));
     }
 }
