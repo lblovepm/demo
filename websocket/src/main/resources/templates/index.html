@@ -69,7 +69,7 @@
 			$("#show").html("您的浏览器支持WebSocket");
 
 			//实现化WebSocket对象，指定要连接的服务器地址与端口
-			websocket = new WebSocket("ws://127.0.0.1:8082/websocket/simple");
+			websocket = new WebSocket("ws://localhost:8082/websocket/simple");
 
 			//打开事件
 			websocket.onopen = function() {
