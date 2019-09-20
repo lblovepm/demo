@@ -10,7 +10,7 @@
 			border: 1px lightgrey solid;
 			width: 50%;
 			float: left;
-			min-height: 600px;
+			min-height: 450px;
 			margin: 0;
 			padding: 0;
 		}
@@ -35,7 +35,7 @@
 		}
 		
 		.send_button{
-			margin-left: 55%;
+			float: right;
 			height: 20%;
 			width: 20%;
 			background-color: dodgerblue;
@@ -48,10 +48,10 @@
 		<ul class="chat_border" id="chatUl">
 		</ul>
 		<div class="input_border">
-			<textarea style="width: 100%;height: 80%;" id="message" placeholder="请输入聊天内容...">
+			<textarea style="width: 100%;height: 80%;box-sizing:border-box;" id="message" placeholder="请输入聊天内容...">
 
 			</textarea>
-			<span id="show" style="color: red;"></span>
+			<span id="show" style="color: red;float: left;"></span>
 			<button type="button" class="send_button" onclick="sendMessage()">发送</button>
 		</div>
 	</body>
@@ -103,7 +103,7 @@
 				return;
 			}
 			
-			var sendText = {userId:1,message:message}
+			var sendText = {userId:1,message:message};
 			websocket.send(JSON.stringify(sendText));
 			$("#message").val("");
 			$("#chatUl").append("<li class='myself_li'>我:"+message+"</li>");
