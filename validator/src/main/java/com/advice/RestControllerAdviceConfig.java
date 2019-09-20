@@ -1,6 +1,7 @@
 package com.advice;
 
 import com.alibaba.fastjson.JSONObject;
+import com.common.ResultResponse;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -26,9 +27,9 @@ public class RestControllerAdviceConfig {
         if(e instanceof BindingResult){
             //TODO @Valid或者@Validated效验产生的异常
             BindingResult bindingResult = (BindingResult) e;
-            resultJson.put("message",bindingResult.getFieldError().getDefaultMessage());
+            ResultResponse.errorResponse(bindingResult.getFieldError().getDefaultMessage());
         }else{
-            resultJson.put("message",e.getLocalizedMessage());
+            ResultResponse.errorResponse(e.getLocalizedMessage());
         }
         return resultJson;
     }

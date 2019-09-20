@@ -38,12 +38,6 @@
             <version>0.2.0</version>
         </dependency>
 
-        <!--validation-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-validation</artifactId>
-        </dependency>
-
         <!--dubbo-registry-nacos-->
         <dependency>
             <groupId>com.alibaba</groupId>

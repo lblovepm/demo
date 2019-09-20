@@ -7,7 +7,7 @@ import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 public class ValidatorModel {
@@ -21,5 +21,5 @@ public class ValidatorModel {
 
     @NotNull(groups = {UpdateGroup.class, AddGroup.class},message = "时间不能为空")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date createTime;
+    private LocalDateTime createTime;
 }

@@ -2,13 +2,11 @@ package com.utils;
 
 import org.springframework.util.StringUtils;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalField;
 import java.util.Date;
 
 /**
@@ -46,7 +44,6 @@ public class DateUtil {
      * @return
      */
     public static LocalDateTime parseStringToDateTime(String dateTimeStr,String dateTimeFormat){
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(dateTimeFormat);
 
         if(StringUtils.isEmpty(dateTimeFormat)){
             throw new RuntimeException("未填写时间解析格式!");
@@ -60,12 +57,12 @@ public class DateUtil {
         }else if(dateTimeFormat.equals(YYYYMMDD) || dateTimeFormat.equals(YYYYMM)){
 
             //解析为【日期】的格式
-            LocalDate.parse(dateTimeStr,dateTimeFormatter);
+            LocalDate.parse(dateTimeStr,DateTimeFormatter.ofPattern(dateTimeFormat));
 
         }else if(dateTimeFormat.equals(HHMMSS) || dateTimeFormat.equals(HHMM)){
 
             //解析为【时间】的格式
-            LocalTime.parse(dateTimeStr,dateTimeFormatter);
+            LocalTime.parse(dateTimeStr,DateTimeFormatter.ofPattern(dateTimeFormat));
 
         }else{
             throw new RuntimeException("解析格式不合法!");
