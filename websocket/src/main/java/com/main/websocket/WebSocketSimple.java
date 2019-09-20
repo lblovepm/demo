@@ -1,5 +1,7 @@
 package com.main.websocket;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
@@ -9,9 +11,13 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
-@ServerEndpoint(value = "/websocket/client")
+/**
+ * 1、websocket可以通过http://www.websocket-test.com/网站进行国内测试
+ * 2、启动WebSocketSpringBootApplication，在测试网站输入ws://127.0.0.1:8082/websocket/simple就可以连接了
+ */
+@ServerEndpoint(value = "/websocket/simple")
 @Component
-public class ClientWebSocket {
+public class WebSocketSimple {
 
     //在线人数,默认为0,AtomicLong可以保证线程安全
     private static AtomicLong onlineNumber = new AtomicLong(0);
@@ -25,7 +31,7 @@ public class ClientWebSocket {
      * @throws IOException
      */
     @OnOpen
-    public void onOpen(Session session) throws IOException {
+    public void onOpen(Session session,EndpointConfig conf) throws IOException {
 
         //session存入
         sessionMap.put(session.getId(),session);
@@ -33,7 +39,9 @@ public class ClientWebSocket {
         //在线人数+1
         onlineNumber.incrementAndGet();
 
-        session.getBasicRemote().sendText("客户端(sessionId="+session.getId()+")连接成功！当前在线人数为:" + onlineNumber.get());
+//        session.getBasicRemote().sendText("客户端(sessionId="+session.getId()+")上线！当前在线人数为:" + onlineNumber.get());
+
+        System.out.println("客户端(sessionId="+session.getId()+")上线！当前在线人数为:" + onlineNumber.get());
     }
 
     /**
@@ -41,7 +49,7 @@ public class ClientWebSocket {
      * @param session
      */
     @OnClose
-    public void onClose(Session session) {
+    public void onClose(Session session,CloseReason reason) {
 
         //session移除
         sessionMap.remove(session.getId());
@@ -49,19 +57,22 @@ public class ClientWebSocket {
         //在线人数-1
         onlineNumber.decrementAndGet();
 
-        System.out.println("客户端(sessionId="+session.getId()+")已经关闭！当前在线人数为:" + onlineNumber.get());
+        System.out.println("客户端(sessionId="+session.getId()+")关闭！关闭原因为："+reason.getReasonPhrase()+"!当前在线人数为:" + onlineNumber.get());
     }
 
     /**
      * 收到客户端发送的消息
-     * @param message
      * @param session
+     * @param message
      * @throws IOException
      */
     @OnMessage
-    public void onMessage(String message, Session session) throws IOException {
+    public void onMessage(Session session,String message) throws IOException {
 
-        System.out.println("来自客户端(sessionId="+session.getId()+")的消息:" + message);
+        JSONObject messageJson = JSON.parseObject(message);
+        System.out.println("userId----->"+messageJson.getInteger("userId"));
+
+        System.out.println("来自客户端(sessionId="+session.getId()+")的消息:" + messageJson.getString("message"));
 
         Set<String> sessionIdSet = sessionMap.keySet();
         for (String sessionId : sessionIdSet) {
